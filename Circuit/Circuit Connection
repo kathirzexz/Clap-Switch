@@ -1,0 +1,13 @@
+🔌 Simple Circuit Connection
+
+
+1️⃣ Sound Sensor → Arduino
+VCC → 5V
+GND → GND
+DO → D2
+
+
+2️⃣ Relay Module → Arduino
+VCC → 5V
+GND → GND
+IN → D3

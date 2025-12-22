@@ -3,4 +3,4 @@ A clap switch is an electronic circuit that turns a device ON or OFF by detectin
 Is This Not Only Use Lamp Whatever Use Like Home Automation!
 like : Fan 
        Lamp 
-       Mainly Input Voltage, 
+       Mainly Input Voltage

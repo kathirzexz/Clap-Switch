@@ -1,47 +1,26 @@
-#define SENSOR_PIN 2
-#define RELAY_PIN 3
+// 🔊 Clap Controlled Bulb using Arduino
 
-int previousValue = HIGH;
-int clapCount = 0;
-unsigned long previousTime = millis();
-bool relayOutPut = HIGH;
+int soundSensor = 2;    // KY-038 D0 pin connected to Arduino D2
+int relayPin = 8;       // Relay IN pin connected to Arduino D8
+bool bulbState = false; // Tracks bulb ON/OFF state
+unsigned long lastTrigger = 0;
+int debounceDelay = 200; // Prevents multiple triggers from one clap
 
-void setup()
-{
-  pinMode(SENSOR_PIN, INPUT);
-  pinMode(RELAY_PIN, OUTPUT);
-
-  // Turn off relay. Relay is LOW level triggered relay
-  digitalWrite(RELAY_PIN, HIGH);
+void setup() {
+  pinMode(soundSensor, INPUT);  // Sound sensor digital output
+  pinMode(relayPin, OUTPUT);    // Relay module control pin
+  digitalWrite(relayPin, LOW);  // Start with bulb OFF
+  Serial.begin(9600);
+  Serial.println("Clap Controlled Bulb Ready! 👏");
 }
 
-void loop()
-{
-  int currentValue = digitalRead(SENSOR_PIN);
+void loop() {
+  int sensorValue = digitalRead(soundSensor); // Read sound signal
 
-  if (previousValue == HIGH && currentValue == LOW)
-  {
-    if (clapCount == 1 && millis() - previousTime >= 500)
-    {
-      clapCount = 0;
-    }
-
-    if (clapCount == 0)
-    {
-      previousTime = millis();
-    }
-
-    clapCount++;
-
-    if (clapCount == 2)
-    {
-      relayOutPut = !relayOutPut;
-      digitalWrite(RELAY_PIN, relayOutPut);
-      clapCount = 0;
-    }
-
-    delay(200);
+  if (sensorValue == HIGH && (millis() - lastTrigger > debounceDelay)) {
+    bulbState = !bulbState;  // Toggle bulb state
+    digitalWrite(relayPin, bulbState ? HIGH : LOW);
+    Serial.println(bulbState ? "💡 Bulb ON" : "💤 Bulb OFF");
+    lastTrigger = millis();  // Update last trigger time
   }
-
-  previousValue = currentValue;
 }
